@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'legislation.apps.LegislationConfig',  
-    'rest_framework',
     'django_filters',
     'corsheaders',
 ]
