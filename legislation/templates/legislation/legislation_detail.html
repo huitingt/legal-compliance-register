@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ legislation.title }} | Legal Compliance Register{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    {# Navigation breadcrumb #}
+    <div class="mb-6 text-sm">
+        <a href="{% url 'legislation:list' %}" class="text-blue-700 hover:text-blue-900">Compliance Register</a>
+        <span class="mx-2 text-gray-500">›</span>
+        <span class="text-gray-600">{{ legislation.title }}</span>
+    </div>
+
+    {# Main content container #}
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        {# Header section #}
+        <div class="border-b border-gray-200 bg-gray-50 p-6">
+            <h1 class="text-2xl font-semibold text-gray-900">{{ legislation.title }}</h1>
+            <div class="mt-3 flex flex-wrap gap-2">
+                <span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-medium rounded">
+                    Tier {{ legislation.tier }}
+                </span>
+                <span class="px-3 py-1 bg-gray-100 text-gray-800 text-sm font-medium rounded">
+                    {{ legislation.jurisdiction.name }}
+                </span>
+                <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm font-medium rounded">
+                    {{ legislation.category }}
+                </span>
+            </div>
+        </div>
+
+        {# Content sections #}
+        <div class="divide-y divide-gray-200">
+            {# Overview section #}
+            <section class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Overview</h2>
+                <div class="prose max-w-none text-gray-600">
+                    {{ legislation.description|linebreaks }}
+                </div>
+            </section>
+
+            {# Responsibility section #}
+            <section class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Responsibility & Administration</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    {# Owners information #}
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Compliance Owner</h3>
+                            <p class="text-gray-900">{{ legislation.compliance_owner }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Business Owner</h3>
+                            <p class="text-gray-900">{{ legislation.business_owner }}</p>
+                        </div>
+                    </div>
+                    
+                    {# Administration information #}
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Administering Department</h3>
+                            <p class="text-gray-900">{{ legislation.admin_department }}</p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Administering Body</h3>
+                            <p class="text-gray-900">{{ legislation.administering_body }}</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {# Review information section #}
+            <section class="p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Review Information</h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    {% if legislation.last_review_date or legislation.next_review_date %}
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            {% if legislation.last_review_date %}
+                                <div class="mb-4">
+                                    <h3 class="text-sm font-semibold text-gray-700 mb-1">Last Review Date</h3>
+                                    <p class="text-gray-900">{{ legislation.last_review_date|date:"F j, Y" }}</p>
+                                </div>
+                            {% endif %}
+                            {% if legislation.next_review_date %}
+                                <div>
+                                    <h3 class="text-sm font-semibold text-gray-700 mb-1">Next Review Due</h3>
+                                    <p class="text-gray-900">{{ legislation.next_review_date|date:"F j, Y" }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {% if legislation.reviews.exists %}
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">Review History</h3>
+                            <div class="space-y-3">
+                                {% for review in legislation.reviews.all %}
+                                    <div class="border-l-4 border-blue-600 pl-3 py-1">
+                                        <div class="text-sm">
+                                            <span class="font-medium">{{ review.review_date|date:"F j, Y" }}</span>
+                                            <span class="text-gray-600">by {{ review.reviewed_by }}</span>
+                                        </div>
+                                        {% if review.comments %}
+                                            <p class="text-sm text-gray-600 mt-1">{{ review.comments }}</p>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+
+            {# Metadata section #}
+            <section class="p-6 bg-gray-50">
+                <div class="text-sm text-gray-500">
+                    <div class="md:flex md:justify-between">
+                        <p>Created: {{ legislation.created_at|date:"F j, Y" }}</p>
+                        <p>Last Updated: {{ legislation.updated_at|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

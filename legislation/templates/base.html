@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Legal Compliance Register{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-blue-700 text-white p-4">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Legal Compliance Register</h1>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
